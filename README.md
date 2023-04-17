@@ -5,3 +5,4 @@ Submission for the second challenge of Lighthall's 2023 Software Engineering Sup
 * Samman Bhetwal
 * Mauro
 * Steph Beneschan
+* Seij
