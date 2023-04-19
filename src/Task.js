@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Task({task, userDataEndpoint}) {
+export default function Task({task, userDataEndpoint, logTasks}) {
   //this component is for a single task element
 
   //clicking the pencil icon will:
@@ -29,7 +29,11 @@ export default function Task({task, userDataEndpoint}) {
     //submit a PUT request with current form values
     fetch(userDataEndpoint + "/task/" + task.id, {
       method: "PUT",
-      body: JSON.stringify({task: data})
+      body: JSON.stringify({task: data}),
+      headers: {
+        'Accept': 'application/json;charset=utf-8',
+        'Content-Type': 'application/json;charset=utf-8'
+    }
     }).then((response) => {
       console.log(response);
       if (response.status === 404) {
@@ -37,7 +41,9 @@ export default function Task({task, userDataEndpoint}) {
         cancelChangesHandler();
       }
       response.json().then(a => {
-        console.log(a);
+        setReadOnly(true);
+        setBgColorClass('transparent');
+        logTasks();
       })
       .catch((err) => {
         console.log('error in PUT request')

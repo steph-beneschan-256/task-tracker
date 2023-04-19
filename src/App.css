@@ -85,7 +85,6 @@
 .task {
   padding:3px;
   background-color:#dddddd;
-  border: 1px solid red;
   width:30%;
   max-width:400px;
 }
