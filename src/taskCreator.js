@@ -37,21 +37,19 @@ export default function TaskCreator({onTaskCreated, userID}) {
     Once the user has submitted valid task information,
     create a new task data object.
     */
-    function createTask() {
-        //
+    function saveTask() {
+        // Ensure that due date is null or valid
         if((!dueDate) || isValidDate(dueDate)) {
             const newTaskData = {
                 "title": title,
                 "description": description,
-                "completionStatus": "placeholder",
-                "dueDate": dueDate,
-                "userID": userID
+                "completionStatus": "inProgress",
+                "dueDate": dueDate
             }
 
             // Send task data to parent component
             onTaskCreated(newTaskData);
         }
-        console.log("Invalid due date");
     }
 
     return (
@@ -127,7 +125,7 @@ export default function TaskCreator({onTaskCreated, userID}) {
 
             </div>
                 <div>
-                    <button onClick={createTask}>
+                    <button onClick={saveTask}>
                         Save
                     </button>
                 </div>
