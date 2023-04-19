@@ -101,3 +101,11 @@
 .incomplete {
   background-color:#f4fab6;
 }
+
+.transparent {
+  background-color: transparent;
+}
+
+.white {
+  background-color: white;
+}
