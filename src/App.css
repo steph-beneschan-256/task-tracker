@@ -90,3 +90,47 @@
 .input-warning {
   color: red;
 }
+
+/* ------------Task List ------------*/
+.taskList {
+  display:flex;
+  flex-wrap: wrap;
+  align-content:flex-start;
+  gap:10px;
+  margin:auto;
+}
+.task {
+  padding:3px;
+  background-color:#dddddd;
+  width:30%;
+  max-width:400px;
+}
+
+.text-center {
+  text-align:center;
+}
+
+.complete {
+  background-color:#dddddd;
+}
+
+.incomplete {
+  background-color:#f4fab6;
+}
+
+.transparent {
+  background-color: transparent;
+}
+
+.white {
+  background-color: white;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+input {
+  width: 80%;
+  border:none;
+}

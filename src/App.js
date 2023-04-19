@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import TaskCreator from './taskCreator';
+import Task from './Task';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { render } from '@testing-library/react';
@@ -12,6 +13,8 @@ function App() {
   const [userName, setUserName] = useState("user1"); //placeholder user name
   const [userID, setUserID] = useState("e3ae3c35-b65b-48db-b9f3-e7fa63895282"); //using placeholder ID of 0 for testing
   const [editTaskPrompt, setEditTaskPrompt] = useState(<></>);
+  const [userTasks, setUserTasks] = useState([]);
+  const [visibleTasks, setVisibleTasks] = useState([]); //visible tasks displayed on screen, should be pre-sorted
 
   function showEditForm(taskID=null, taskData=null) {
     setEditTaskPrompt(
@@ -51,7 +54,6 @@ function App() {
     //TODO: update UI to reflect newly created/edited task
     // Delete component
     setEditTaskPrompt(<></>);
-    
   }
 
   function taskEditCanceled() {
@@ -59,17 +61,29 @@ function App() {
   }
 
   //debug function
+  //GET request for all
   function logTasks() {
+    //for testing purposes hardcode user "Seij"
+    fetch(userDataEndpoint + "/user/" + userName, {
+      method: "GET",
+    }).then((response) => {
+      response.json().then(a => {
+        setUserTasks(a.tasks); //update all tasks
+        setVisibleTasks(a.tasks); //by default display all tasks in order of oldest -> newest
+      })
+    }))
 
-    fetch(`https://lighthall-task-app.onrender.com/user/${userName}`, {
+  }
+  
+  function logTasks2() {
+  fetch(`https://lighthall-task-app.onrender.com/user/${userName}`, {
       method: "GET",
     }).then((response => {
       response.json().then((responseData) => {
         //
         console.log(responseData);
-      })
+        })
     }))
-
   }
 
   //debug function
@@ -119,15 +133,19 @@ function App() {
         register user (debug)
       </button>
       <button onClick={logTasks}>
-        log tasks (debug)
+      Show All Tasks
       </button>
-
       <button onClick={createNewTask}>
         + Create New Task
       </button>
       <button onClick={debugEditTask}>
         edit task (debug)
       </button>
+      <div className = "taskList">
+        {visibleTasks.map( (task, index) =>
+          <Task userDataEndpoint={userDataEndpoint} task={task} key={task.id ? task.id : index}></Task>
+        )}
+      </div>
     </div>
   );
 }
