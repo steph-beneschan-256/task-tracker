@@ -27,15 +27,22 @@ export default function Task({task, userDataEndpoint}) {
 
   const saveChangesHandler = () => {
     //submit a PUT request with current form values
-    console.log({task})
-    console.log(JSON.stringify({task: data}))
     fetch(userDataEndpoint + "/task/" + task.id, {
       method: "PUT",
       body: JSON.stringify({task: data})
     }).then((response) => {
       console.log(response);
+      if (response.status === 404) {
+        console.log('error in PUT request, 404 error')
+        cancelChangesHandler();
+      }
       response.json().then(a => {
         console.log(a);
+      })
+      .catch((err) => {
+        console.log('error in PUT request')
+        console.log(err);
+        cancelChangesHandler();
       })
     })
   }

@@ -33,9 +33,7 @@ function App() {
   //GET request for all
   function logTasks() {
     //for testing purposes hardcode user "Seij"
-    var user = "Seij";
-
-    fetch(userDataEndpoint + "/user/" + user, {
+    fetch(userDataEndpoint + "/user/" + userName, {
       method: "GET",
     }).then((response) => {
       response.json().then(a => {
