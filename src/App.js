@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import TaskCreator from './taskCreator';
+import Task from './Task';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { render } from '@testing-library/react';
@@ -12,6 +13,7 @@ function App() {
   const [userName, setUserName] = useState("user1");
   const [userID, setUserID] = useState(null); //using placeholder ID of 0 for testing
   const [userTasks, setUserTasks] = useState([]);
+  const [visibleTasks, setVisibleTasks] = useState([]); //visible tasks displayed on screen, should be pre-sorted
 
   // Make sure to pass this function to the TaskCreator element
   function SaveNewTask(newTaskData) {
@@ -24,17 +26,21 @@ function App() {
       console.log(response);
       response.json().then((r) => console.log(r));
     })
-    
+
   }
 
   //debug function
+  //GET request for all
   function logTasks() {
-    fetch(userDataEndpoint + "/user", {
+    //for testing purposes hardcode user "Seij"
+    var user = "Seij";
+
+    fetch(userDataEndpoint + "/user/" + user, {
       method: "GET",
-      username: userName
     }).then((response) => {
       response.json().then(a => {
-        console.log(a);
+        setUserTasks(a.tasks); //update all tasks
+        setVisibleTasks(a.tasks); //by default display all tasks in order of oldest -> newest
       })
     })
   }
@@ -63,8 +69,13 @@ function App() {
         a
       </button>
       <button onClick={logTasks}>
-        b
+        Show All Tasks
       </button>
+      <div className = "taskList">
+        {visibleTasks.map( (task, index) =>
+          <Task task={task} key={task.id ? task.id : index}></Task>
+        )}
+      </div>
     </div>
   );
 }
