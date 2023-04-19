@@ -1,17 +1,21 @@
 import { useState } from "react";
 
+const userDataEndpoint = "https://lighthall-task-app.onrender.com";
+
 /*
 Notes:
 * The prop onTaskCreated should be a function passed down from the parent component
 
+* should move fetching to inside this component
+* rewrite component to allow for editing as well as creating tasks; could receive taskData object as prop along with taskID
 */
 
-export default function TaskCreator({onTaskCreated, userID}) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [dueDate, setDueDate] = useState(null);
+export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID, taskData}) {
+    const [title, setTitle] = useState(taskData ? taskData["title"] : "");
+    const [description, setDescription] = useState(taskData ? taskData["description"] : "");
+    const [dueDate, setDueDate] = useState(taskData ? taskData["dueDate"] : "");
     // for <select> element
-    const [usingCustomDueDate, setUsingCustomDueDate] = useState(null);
+    const [usingCustomDueDate, setUsingCustomDueDate] = useState(false);
 
     /*
     Validate the input date string from the <input type="date"> element.
@@ -37,21 +41,34 @@ export default function TaskCreator({onTaskCreated, userID}) {
     Once the user has submitted valid task information,
     create a new task data object.
     */
-    function createTask() {
-        //
+    function saveTask() {
+        // Ensure that due date is null or valid
         if((!dueDate) || isValidDate(dueDate)) {
             const newTaskData = {
                 "title": title,
                 "description": description,
-                "completionStatus": "placeholder",
+                "completionStatus": "inProgress",
                 "dueDate": dueDate,
-                "userID": userID
+                "userId": userID
             }
 
-            // Send task data to parent component
-            onTaskCreated(newTaskData);
+            fetch(`${userDataEndpoint}/task${taskID ? `/${taskID}` : ""}`, {
+                method: (taskID ? "PUT" : "POST"),
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  "task": newTaskData
+                })
+              }).then(response => {
+                console.log(response);
+                // Inform the parent component that the data has been saved
+                onTaskSaved(newTaskData);
+                //TODO: error handling
+              })
+
         }
-        console.log("Invalid due date");
     }
 
     return (
@@ -77,21 +94,21 @@ export default function TaskCreator({onTaskCreated, userID}) {
                         <select defaultValue={"none"} onChange={(e) => {
                             switch(e.target.value) {
                                 case "none":
-                                    setDueDate(null);
+                                    setDueDate("");
                                     setUsingCustomDueDate(false);
                                     break;
                                 case "tomorrow":
-                                    let dateToday = new Date(Date.now());
-                                    dateToday.setDate(dateToday.getDate()+1);
-                                    setDueDate(dateToday);
+                                    let dateTomorrow = new Date(Date.now());
+                                    dateTomorrow.setDate(dateTomorrow.getDate()+1);
+                                    setDueDate(dateTomorrow.toDateString());
                                     setUsingCustomDueDate(false);
                                     break;
                                 case "custom":
-                                    setDueDate(null);
+                                    setDueDate("");
                                     setUsingCustomDueDate(true);
                                     break;
                                 default:
-                                    setDueDate(null);
+                                    setDueDate("");
                                     break;
                             }
                         }}>
@@ -126,8 +143,11 @@ export default function TaskCreator({onTaskCreated, userID}) {
                 </label>
 
             </div>
-                <div>
-                    <button onClick={createTask}>
+                <div style={{"padding":"50px"}}>
+                    <button className="task-cancel-button" onClick={onEditCanceled}>
+                        Cancel
+                    </button>
+                    <button className="task-save-button" onClick={saveTask}>
                         Save
                     </button>
                 </div>
