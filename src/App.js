@@ -73,7 +73,7 @@ function App() {
       </button>
       <div className = "taskList">
         {visibleTasks.map( (task, index) =>
-          <Task task={task} key={task.id ? task.id : index}></Task>
+          <Task userDataEndpoint={userDataEndpoint} task={task} key={task.id ? task.id : index}></Task>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Task({task}) {
+export default function Task({task, userDataEndpoint}) {
   //this component is for a single task element
 
   //clicking the pencil icon will:
@@ -14,12 +14,10 @@ export default function Task({task}) {
     dueDate: task.dueDate,
     completionStatus: task.completionStatus
   };
+
   const [data, setData] = useState(defaultTask)
-
   const [bgColorClass, setBgColorClass] = useState('transparent');
-
   const [readOnly, setReadOnly] = useState(true);
-  const [showButton, setShowButton] = useState('visible')
 
   const changeHandler = e => {
     setData( prevData => {
@@ -29,6 +27,17 @@ export default function Task({task}) {
 
   const saveChangesHandler = () => {
     //submit a PUT request with current form values
+    console.log({task})
+    console.log(JSON.stringify({task: data}))
+    fetch(userDataEndpoint + "/task/" + task.id, {
+      method: "PUT",
+      body: JSON.stringify({task: data})
+    }).then((response) => {
+      console.log(response);
+      response.json().then(a => {
+        console.log(a);
+      })
+    })
   }
 
   const cancelChangesHandler = () => {
@@ -44,9 +53,9 @@ export default function Task({task}) {
   }
   return (
     <div className='task'>
-      <img src="pencil.png" onClick={editClickHandler} alt="edit"></img>
-      {!readOnly ? <button onClick={saveChangesHandler}>Save Changes</button> : null}
-      {!readOnly ? <button onClick={cancelChangesHandler}>Cancel Changes</button> : null}
+      <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
+      {!readOnly ? <button className='cursor-pointer' onClick={saveChangesHandler}>Save Changes</button> : null}
+      {!readOnly ? <button className='cursor-pointer' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
       <form onChange={changeHandler}>
         <input className={bgColorClass} readOnly={readOnly} name='title' value={data.title}></input>
         <input className={bgColorClass} readOnly={readOnly} name='description' value={data.description}></input>
