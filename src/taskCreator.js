@@ -1,15 +1,19 @@
 import { useState } from "react";
 
+const userDataEndpoint = "https://lighthall-task-app.onrender.com";
+
 /*
 Notes:
 * The prop onTaskCreated should be a function passed down from the parent component
 
+* should move fetching to inside this component
+* rewrite component to allow for editing as well as creating tasks; could receive taskData object as prop along with taskID
 */
 
-export default function TaskCreator({onTaskCreated, userID}) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [dueDate, setDueDate] = useState(null);
+export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID, taskData}) {
+    const [title, setTitle] = useState(taskData ? taskData["title"] : "");
+    const [description, setDescription] = useState(taskData ? taskData["description"] : "");
+    const [dueDate, setDueDate] = useState(taskData ? taskData["dueDate"] : null);
     // for <select> element
     const [usingCustomDueDate, setUsingCustomDueDate] = useState(null);
 
@@ -44,11 +48,26 @@ export default function TaskCreator({onTaskCreated, userID}) {
                 "title": title,
                 "description": description,
                 "completionStatus": "inProgress",
-                "dueDate": dueDate
+                "dueDate": dueDate,
+                "userId": userID
             }
 
-            // Send task data to parent component
-            onTaskCreated(newTaskData);
+            fetch(`${userDataEndpoint}/task${taskID ? `/${taskID}` : ""}`, {
+                method: (taskID ? "PUT" : "POST"),
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  "task": newTaskData
+                })
+              }).then(response => {
+                console.log(response);
+                // Inform the parent component that the data has been saved
+                onTaskSaved(newTaskData);
+                //TODO: error handling
+              })
+
         }
     }
 
@@ -124,8 +143,11 @@ export default function TaskCreator({onTaskCreated, userID}) {
                 </label>
 
             </div>
-                <div>
-                    <button onClick={saveTask}>
+                <div style={{"padding":"50px"}}>
+                    <button className="task-cancel-button" onClick={onEditCanceled}>
+                        Cancel
+                    </button>
+                    <button className="task-save-button" onClick={saveTask}>
                         Save
                     </button>
                 </div>

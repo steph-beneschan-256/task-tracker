@@ -52,17 +52,34 @@
 }
 
 .task-creator button {
+  height: 50px;
+  border-radius: 5px;
+  font-size: large;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.task-save-button {
+  width: 67%;
   border: none;
   background-color: black;
   color: white;
-  border-radius: 5px;
-  width: 100%;
-  height: 50px;
-  font-size: large;
 }
 
-.task-creator button:hover {
+.task-cancel-button {
+  width: 25%;
+  background-color: transparent;
+  color: black;
+  border: solid;
+}
+
+.task-save-button:hover {
   background-color: #333333;
+  cursor: pointer;
+}
+
+.task-cancel-button:hover {
+  background-color: #00000033;
   cursor: pointer;
 }
 
