@@ -13,9 +13,9 @@ Notes:
 export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID, taskData}) {
     const [title, setTitle] = useState(taskData ? taskData["title"] : "");
     const [description, setDescription] = useState(taskData ? taskData["description"] : "");
-    const [dueDate, setDueDate] = useState(taskData ? taskData["dueDate"] : null);
+    const [dueDate, setDueDate] = useState(taskData ? taskData["dueDate"] : "");
     // for <select> element
-    const [usingCustomDueDate, setUsingCustomDueDate] = useState(null);
+    const [usingCustomDueDate, setUsingCustomDueDate] = useState(false);
 
     /*
     Validate the input date string from the <input type="date"> element.
@@ -94,21 +94,21 @@ export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID
                         <select defaultValue={"none"} onChange={(e) => {
                             switch(e.target.value) {
                                 case "none":
-                                    setDueDate(null);
+                                    setDueDate("");
                                     setUsingCustomDueDate(false);
                                     break;
                                 case "tomorrow":
-                                    let dateToday = new Date(Date.now());
-                                    dateToday.setDate(dateToday.getDate()+1);
-                                    setDueDate(dateToday);
+                                    let dateTomorrow = new Date(Date.now());
+                                    dateTomorrow.setDate(dateTomorrow.getDate()+1);
+                                    setDueDate(dateTomorrow.toDateString());
                                     setUsingCustomDueDate(false);
                                     break;
                                 case "custom":
-                                    setDueDate(null);
+                                    setDueDate("");
                                     setUsingCustomDueDate(true);
                                     break;
                                 default:
-                                    setDueDate(null);
+                                    setDueDate("");
                                     break;
                             }
                         }}>

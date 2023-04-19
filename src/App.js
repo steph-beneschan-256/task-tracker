@@ -23,6 +23,17 @@ function App() {
     showEditForm();
   }
 
+  function debugEditTask() {
+    const taskID = "95b4a972-beb7-49d5-8eab-d10ac45e75c6";
+    const taskData = {
+      "title": "placeholder task",
+      "description": "placeholder description",
+      "completionStatus": "inProgress",
+      "dueDate": "2024-04-21"
+    }
+    showEditForm(taskID, taskData);
+  }
+
   function editTask(taskID) {
     //TODO: read taskData using taskID
     // For now, use placeholder task to represent an existing task that's being edited
@@ -105,14 +116,17 @@ function App() {
       <br></br>
 
       <button onClick={registerUser}>
-        a
+        register user (debug)
       </button>
       <button onClick={logTasks}>
-        b
+        log tasks (debug)
       </button>
 
       <button onClick={createNewTask}>
         + Create New Task
+      </button>
+      <button onClick={debugEditTask}>
+        edit task (debug)
       </button>
     </div>
   );
