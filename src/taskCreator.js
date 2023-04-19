@@ -6,11 +6,12 @@ Notes:
 
 */
 
-export default function TaskCreator({onTaskCreated}) {
+export default function TaskCreator({onTaskCreated, userID}) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [dueDate, setDueDate] = useState(new Date(Date.now()).toDateString());
-
+    const [dueDate, setDueDate] = useState(null);
+    // for <select> element
+    const [usingCustomDueDate, setUsingCustomDueDate] = useState(null);
 
     /*
     Validate the input date string from the <input type="date"> element.
@@ -38,55 +39,98 @@ export default function TaskCreator({onTaskCreated}) {
     */
     function createTask() {
         //
-        if(isValidDate(dueDate)) {
+        if((!dueDate) || isValidDate(dueDate)) {
             const newTaskData = {
                 "title": title,
                 "description": description,
-                "status": "placeholder",
-                "due-date": dueDate,
-                "userID": "placeholder"
+                "completionStatus": "placeholder",
+                "dueDate": dueDate,
+                "userID": userID
             }
 
-            // Send task data to paarent component
+            // Send task data to parent component
             onTaskCreated(newTaskData);
         }
+        console.log("Invalid due date");
     }
 
     return (
-        <div>
-            <div>
+        <div className="task-creator">
+            <h3>Create new task:</h3>
+            <div className="temp-black-line"></div>
+            <div style={{"marginTop": "20px", "marginBottom": "20px"}}>
                 <label>
                     Task name:
-                    <input value={title}
-                    placeholder="My Task" 
-                    onChange={e => setTitle(e.target.value)} />
+                    <div className="task-input-field">
+                        <input value={title}
+                        className="task-title-input"
+                        placeholder="My Task" 
+                        onChange={e => setTitle(e.target.value)} />
+                    </div>
+                    
                 </label>
-            </div>
-            <div>
-            <label>
-                Description:
-                <input value={description}
-                placeholder="(Please describe your task here)"
-                onChange={e => setDescription(e.target.value)}/>
-                </label>
-            </div>
-            <div>
+                <br/>
+                
                 <label>
                     Due Date:
-                    <input type="date" value={dueDate}
-                    onChange={e => setDueDate(e.target.value)}>
-                    </input> 
-                    {
-                        !isValidDate(dueDate) && 
-                        <span>Please enter a valid date</span>
-                    }
+                    <div className="task-input-field">
+                        <select defaultValue={"none"} onChange={(e) => {
+                            switch(e.target.value) {
+                                case "none":
+                                    setDueDate(null);
+                                    setUsingCustomDueDate(false);
+                                    break;
+                                case "tomorrow":
+                                    let dateToday = new Date(Date.now());
+                                    dateToday.setDate(dateToday.getDate()+1);
+                                    setDueDate(dateToday);
+                                    setUsingCustomDueDate(false);
+                                    break;
+                                case "custom":
+                                    setDueDate(null);
+                                    setUsingCustomDueDate(true);
+                                    break;
+                                default:
+                                    setDueDate(null);
+                                    break;
+                            }
+                        }}>
+                            <option value="none">
+                                No due date
+                            </option>
+                            <option value="tomorrow">
+                                Tomorrow
+                            </option>
+                            <option value="custom">
+                                Pick a time...
+                            </option>
+                        </select>
+                        {usingCustomDueDate && (<input type="date" className="date-input" value={dueDate}
+                        onChange={e => setDueDate(e.target.value)}>
+                        </input>) }
+                        {
+                            usingCustomDueDate && !isValidDate(dueDate) && 
+                            <span className="input-warning">(!) Please enter a valid date</span>
+                        }
+                    </div>
                 </label>
+                <br/>
+
+                <label>
+                    Description:
+                    <div className="task-input-field">
+                        <textarea value={description}
+                        placeholder="(Please describe your task here)"
+                        onChange={e => setDescription(e.target.value)}/>
+                    </div>
+                </label>
+
             </div>
-            <div>
-                <button onClick={createTask}>
-                    Create New Task
-                </button>
-            </div>
+                <div>
+                    <button onClick={createTask}>
+                        Save
+                    </button>
+                </div>
         </div>
     )
 }

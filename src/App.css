@@ -1,10 +1,5 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  margin: 2vw;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -13,26 +8,68 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.task-view {
+  background-color: #dddddd;
+  border-radius: 20px;
+  margin: 2vw;
+}
+
+.temp-black-line {
+  background-color: black;
+  width: 100%;
+  height: 1px;
+
+}
+
+.task-creator textarea {
+  width: 100%;
+}
+
+.task-creator {
+  background-color: #dddddd;
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 800px;
+}
+
+.task-creator h3 {
+  text-align: center;
+}
+
+.task-input-field {
+  padding-left: 20px;
+  width: 80%;
+}
+
+.task-creator label {
+  text-transform: uppercase;
+  font-size: small;
+}
+
+.task-creator input, textarea {
+  width: 100%;
+  font-size: large;
+}
+
+.task-creator button {
+  border: none;
+  background-color: black;
   color: white;
+  border-radius: 5px;
+  width: 100%;
+  height: 50px;
+  font-size: large;
 }
 
-.App-link {
-  color: #61dafb;
+.task-creator button:hover {
+  background-color: #333333;
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.date-input {
+  max-width: 200px;
+}
+
+.input-warning {
+  color: red;
 }

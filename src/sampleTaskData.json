@@ -1,0 +1,16 @@
+{
+    "user1": [
+        {
+            "title": "Grocery Shopping",
+            "description": "Get milk, bread, eggs, tofu, tomatoes, and carrots from the grocery store.",
+            "due-date": "2023-04-21",
+            "status": "not started"
+        },
+        {
+            "title": "Schedule psychiatrist appointment",
+            "description": "",
+            "due-date": "2023-04-21",
+            "status": "not started"
+        }
+    ]
+}
