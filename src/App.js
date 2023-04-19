@@ -11,10 +11,13 @@ const userDataEndpoint = "https://lighthall-task-app.onrender.com";
 function App() {
   // Name and ID of currently logged-in user
   const [userName, setUserName] = useState("user1"); //placeholder user name
-  const [userID, setUserID] = useState("e3ae3c35-b65b-48db-b9f3-e7fa63895282"); //using placeholder ID of 0 for testing
+  const [userID, setUserID] = useState("34a9df55-d41d-460d-9ace-10c54eced764"); //using placeholder ID for testing
   const [editTaskPrompt, setEditTaskPrompt] = useState(<></>);
   const [userTasks, setUserTasks] = useState([]);
   const [visibleTasks, setVisibleTasks] = useState([]); //visible tasks displayed on screen, should be pre-sorted
+  
+  const [sortField, setSortField] = useState("dueDate"); //field by which to sort the tasks
+  const [sortAscending, setSortAscending] = useState(true);
 
   function showEditForm(taskID=null, taskData=null) {
     setEditTaskPrompt(
@@ -51,17 +54,6 @@ function App() {
     });
 
   }
-  
-  function logTasks2() {
-  fetch(`https://lighthall-task-app.onrender.com/user/${userName}`, {
-      method: "GET",
-    }).then((response => {
-      response.json().then((responseData) => {
-        //
-        console.log(responseData);
-        })
-    }))
-  }
 
   //debug function
   function registerUser() {
@@ -87,6 +79,37 @@ function App() {
         setUserID(jsonData["id"]);
       })
     })
+  }
+
+  // Compare two tasks based on a given field
+  function compareTasks(taskA, taskB, taskSortField) {
+    console.log(taskSortField);
+    switch(taskSortField) {
+      case "dueDate":
+        const dateA = new Date(taskA[taskSortField]);
+        const dateB = new Date(taskB[taskSortField]);
+        return dateA - dateB;
+      case "completionStatus":
+        const statusA = taskA[taskSortField];
+        const statusB = taskB[taskSortField];
+        if(statusA === statusB)
+          return 0;
+        else if(statusA === "inProgress")
+          return -1;
+        return 1;
+      default:
+        return taskA[taskSortField].localeCompare(taskB[taskSortField]);
+    }
+  } 
+  
+  // Sort the user's tasks and update the UI accordingly
+  function sortTasks(taskSortField, isAscending) {
+    if(userTasks) {
+      let tasksSorted = userTasks;
+      tasksSorted.sort((taskA, taskB) => {
+        return (isAscending ? 1 : -1)*compareTasks(taskA, taskB, taskSortField)});
+      setVisibleTasks(tasksSorted);
+    }  
   }
 
   useEffect(() => {
@@ -115,11 +138,32 @@ function App() {
       <button onClick={createNewTask}>
         + Create New Task
       </button>
-      <div className = "taskList">
+      Sort tasks by:
+      <select value={sortField} onChange={e => 
+          {
+            setSortField(e.target.value);
+            sortTasks(e.target.value, sortAscending);
+          }
+      }>
+        <option value="title">Title</option>
+        <option value="dueDate">Due Date</option>
+        <option value="completionStatus">Completion Status</option>
+        <option value="description">Description</option>
+      </select>
+      <button onClick={e => 
+        {
+          const newAscendingValue = !sortAscending;
+          setSortAscending(newAscendingValue);
+          sortTasks(sortField, newAscendingValue);
+        }
+      }>
+        sort {sortAscending ? "descending" : "ascending"}
+      </button>
+      {visibleTasks && (<div className = "taskList">
         {visibleTasks.map( (task, index) =>
           <Task userDataEndpoint={userDataEndpoint} task={task} key={task.id ? task.id : index}></Task>
         )}
-      </div>
+      </div>)}
     </div>
   );
 }
