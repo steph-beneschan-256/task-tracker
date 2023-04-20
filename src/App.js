@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import TaskCreator from './taskCreator';
 import Task from './Task';
+import LoginBar from './LoginBar';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { render } from '@testing-library/react';
@@ -43,6 +44,13 @@ function App() {
 
   function taskEditCanceled() {
     setEditTaskPrompt(<></>);
+  }
+
+  function loggedIn(data) {
+    setUserID(data["id"]);
+    setUserName(data["name"]);
+    setUserTasks(data["tasks"]);
+    setVisibleTasks(data["tasks"]);
   }
 
   //GET request for all
@@ -134,6 +142,7 @@ function App() {
 
   return (
     <div className="App">
+      <LoginBar onLoggedIn={loggedIn} dataEndpoint={userDataEndpoint} />
       <br></br>
       {editTaskPrompt}
       <br></br>
