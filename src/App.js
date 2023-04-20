@@ -49,7 +49,6 @@ function App() {
     setUserName("");
     setUserID("");
     setUserTasks([]);
-    setVisibleTasks([]);
   }
 
   //GET request for all
@@ -67,8 +66,6 @@ function App() {
         setUserTasks(a.tasks); //update all tasks for the UI
       })
     });
-
-  }
 
   }
 
