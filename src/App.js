@@ -15,8 +15,8 @@ function App() {
   const [editTaskPrompt, setEditTaskPrompt] = useState(<></>);
   const [userTasks, setUserTasks] = useState([]);
   const [visibleTasks, setVisibleTasks] = useState([]); //visible tasks displayed on screen, should be pre-sorted
-  
-    
+
+
   const sortFieldPriority = ["completionStatus", "dueDate", "title", "description"]; // Task field priorities for tie breaking
   const [sortField, setSortField] = useState(sortFieldPriority[0]); //field by which to sort the tasks
   const [sortAscending, setSortAscending] = useState(true);
@@ -26,7 +26,7 @@ function App() {
   function showEditForm(taskID=null, taskData=null) {
     setEditTaskPrompt(
       <TaskCreator onTaskSaved={taskSaved} onEditCanceled={taskEditCanceled} userID={userID} taskID={taskID} taskData={taskData}/>
-    ) 
+    )
   }
 
   function createNewTask() {
@@ -77,7 +77,7 @@ function App() {
           "name": userName
         }
       })
-      
+
     }).then((response) => {
       console.log(response);
       response.json().then(jsonData => {
@@ -114,8 +114,8 @@ function App() {
       default:
         return taskA[taskSortField].localeCompare(taskB[taskSortField]);
     }
-  } 
-  
+  }
+
   // Sort the user's tasks and update the UI accordingly
   function sortTasks(taskSortField, isAscending) {
     if(userTasks) {
@@ -129,7 +129,7 @@ function App() {
         return (isAscending ? 1 : -1)*d;
       });
       setVisibleTasks(tasksSorted);
-    }  
+    }
   }
 
   return (
@@ -152,7 +152,7 @@ function App() {
       </button>
       <div>
       Sort tasks by:
-      <select value={sortField} onChange={e => 
+      <select value={sortField} onChange={e =>
           {
             setSortField(e.target.value);
             sortTasks(e.target.value, sortAscending);
@@ -163,7 +163,7 @@ function App() {
         <option value="completionStatus">Completion Status</option>
         <option value="description">Description</option>
       </select>
-      <button onClick={() => 
+      <button onClick={() =>
         {
           const newAscendingValue = !sortAscending;
           setSortAscending(newAscendingValue);
@@ -173,10 +173,10 @@ function App() {
         sort {sortAscending ? "descending" : "ascending"}
       </button>
       </div>
-      
+
       {visibleTasks && (<div className = "taskList">
         {visibleTasks.map( (task, index) =>
-          <Task userDataEndpoint={userDataEndpoint} task={task} key={task.id ? task.id : index}></Task>
+          <Task logTasks={logTasks} userDataEndpoint={userDataEndpoint} task={task} key={task.id ? task.id : index}></Task>
         )}
       </div>)}
     </div>
