@@ -74,7 +74,6 @@ export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID
                     console.log("Could not save data");
                     setStatusMsg(response["statusText"]);
                 }
-                //TODO: error handling
               })
 
         }

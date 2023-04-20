@@ -11,13 +11,17 @@ const userDataEndpoint = "https://lighthall-task-app.onrender.com";
 function App() {
   // Name and ID of currently logged-in user
   const [userName, setUserName] = useState("user1"); //placeholder user name
-  const [userID, setUserID] = useState("25d18533-7fd4-4fdb-82bc-0a91dd4c1179"); //using placeholder ID for testing
+  const [userID, setUserID] = useState("bf6ab62a-dfaf-4245-bf5c-003151a2eab0"); //using placeholder ID for testing
   const [editTaskPrompt, setEditTaskPrompt] = useState(<></>);
   const [userTasks, setUserTasks] = useState([]);
   const [visibleTasks, setVisibleTasks] = useState([]); //visible tasks displayed on screen, should be pre-sorted
   
-  const [sortField, setSortField] = useState("dueDate"); //field by which to sort the tasks
+    
+  const sortFieldPriority = ["completionStatus", "dueDate", "title", "description"]; // Task field priorities for tie breaking
+  const [sortField, setSortField] = useState(sortFieldPriority[0]); //field by which to sort the tasks
   const [sortAscending, setSortAscending] = useState(true);
+
+
 
   function showEditForm(taskID=null, taskData=null) {
     setEditTaskPrompt(
@@ -88,18 +92,23 @@ function App() {
 
   // Compare two tasks based on a given field
   function compareTasks(taskA, taskB, taskSortField) {
-    console.log(taskSortField);
+    let valueA = taskA[taskSortField];
+    let valueB = taskB[taskSortField];
     switch(taskSortField) {
       case "dueDate":
-        const dateA = new Date(taskA[taskSortField]);
-        const dateB = new Date(taskB[taskSortField]);
-        return dateA - dateB;
-      case "completionStatus":
-        const statusA = taskA[taskSortField];
-        const statusB = taskB[taskSortField];
-        if(statusA === statusB)
+        // Sort by due date; tasks without a due date come later
+        if(valueA === valueB)
           return 0;
-        else if(statusA === "inProgress")
+        else if(valueA === "")
+          return 1;
+        else if(valueB === "")
+          return -1;
+        return new Date(valueA) - new Date(valueB);
+      case "completionStatus":
+        // Sort by completion status; completed tasks come later
+        if(valueA === valueB)
+          return 0;
+        else if(valueA === "inProgress")
           return -1;
         return 1;
       default:
@@ -112,7 +121,13 @@ function App() {
     if(userTasks) {
       let tasksSorted = userTasks;
       tasksSorted.sort((taskA, taskB) => {
-        return (isAscending ? 1 : -1)*compareTasks(taskA, taskB, taskSortField)});
+        let d = compareTasks(taskA, taskB, taskSortField);
+        // Break ties, if necessary
+        for(let i = 0; ((d === 0) && (i < sortFieldPriority.length)); ++i) {
+          d = compareTasks(taskA, taskB, sortFieldPriority[i]);
+        }
+        return (isAscending ? 1 : -1)*d;
+      });
       setVisibleTasks(tasksSorted);
     }  
   }
