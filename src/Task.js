@@ -66,15 +66,17 @@ export default function Task({task, userDataEndpoint, logTasks}) {
   }
   return (
     <div className='task'>
-      <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
-      {!readOnly ? <button className='cursor-pointer' onClick={saveChangesHandler}>Save Changes</button> : null}
-      {!readOnly ? <button className='cursor-pointer' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
       <form onChange={changeHandler}>
-        <input className={bgColorClass} readOnly={readOnly} name='title' value={data.title}></input>
-        <input className={bgColorClass} readOnly={readOnly} name='description' value={data.description}></input>
-        <input className={bgColorClass} readOnly={readOnly} name='dueDate' value={data.dueDate}></input>
-        <input className={bgColorClass} readOnly={readOnly} name='completionStatus' value={data.completionStatus}></input>
+        <textarea   className={bgColorClass} readOnly={readOnly} name='title' value={data.title}></textarea>
+        <textarea  className={bgColorClass+' description'} readOnly={readOnly} name='description' value={data.description}></textarea>
+        <textarea  className={bgColorClass} readOnly={readOnly} name='dueDate' value={data.dueDate}></textarea>
+        <textarea  className={bgColorClass} readOnly={readOnly} name='completionStatus' value={data.completionStatus}></textarea>
       </form>
+      <div className="flex">
+        <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
+        {!readOnly ? <button className='cursor-pointer' onClick={saveChangesHandler}>Save Changes</button> : null}
+        {!readOnly ? <button className='cursor-pointer' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
+      </div>
     </div>
   )
 }

@@ -20,7 +20,7 @@ function App() {
   function showEditForm(taskID=null, taskData=null) {
     setEditTaskPrompt(
       <TaskCreator onTaskSaved={taskSaved} onEditCanceled={taskEditCanceled} userID={userID} taskID={taskID} taskData={taskData}/>
-    ) 
+    )
   }
 
   function createNewTask() {
@@ -94,7 +94,7 @@ function App() {
       </button>
 
       {userID ? (<div>
-        <TaskList userDataEndpoint={userDataEndpoint} userTasks={userTasks}/>
+        <TaskList logTasks={logTasks} userDataEndpoint={userDataEndpoint} userTasks={userTasks}/>
       </div>)
       : 
       (<div>

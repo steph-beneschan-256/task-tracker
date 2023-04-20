@@ -115,12 +115,36 @@
   align-content:flex-start;
   gap:10px;
   margin:auto;
+  background-color:beige;
+  padding:1%;
 }
 .task {
   padding:3px;
   background-color:#dddddd;
   width:30%;
-  max-width:400px;
+  max-width:300px;
+  height:auto;
+  box-sizing:border-box;
+}
+
+.task form {
+  box-sizing:border-box;
+}
+
+.task form textarea{
+  box-sizing:border-box;
+  border:none;
+  resize:none;
+}
+
+.task form button{
+  height:auto;
+  text-align:center;
+  margin:auto;
+}
+
+.description {
+  height:10rem;
 }
 
 .text-center {
@@ -147,7 +171,8 @@
   cursor: pointer;
 }
 
-input {
-  width: 80%;
-  border:none;
+.flex {
+  display:flex;
+  justify-content: flex-start;
+  gap:5px;
 }
