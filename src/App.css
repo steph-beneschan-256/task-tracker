@@ -21,10 +21,7 @@
 
 }
 
-.task-creator textarea {
-  width: 100%;
-}
-
+/* ------- Task Creation Form -------*/
 .task-creator {
   background-color: #dddddd;
   padding: 20px;

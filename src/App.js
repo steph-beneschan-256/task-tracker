@@ -11,7 +11,7 @@ const userDataEndpoint = "https://lighthall-task-app.onrender.com";
 function App() {
   // Name and ID of currently logged-in user
   const [userName, setUserName] = useState("user1"); //placeholder user name
-  const [userID, setUserID] = useState("34a9df55-d41d-460d-9ace-10c54eced764"); //using placeholder ID for testing
+  const [userID, setUserID] = useState("25d18533-7fd4-4fdb-82bc-0a91dd4c1179"); //using placeholder ID for testing
   const [editTaskPrompt, setEditTaskPrompt] = useState(<></>);
   const [userTasks, setUserTasks] = useState([]);
   const [visibleTasks, setVisibleTasks] = useState([]); //visible tasks displayed on screen, should be pre-sorted
@@ -31,8 +31,9 @@ function App() {
 
   // Make sure to pass this function to the TaskCreator element
   function taskSaved(newTaskData) {
-    //TODO: update UI to reflect newly created/edited task
-    // Delete component
+    //Update UI to reflect newly created/edited task
+    logTasks();
+    // Delete input form component
     setEditTaskPrompt(<></>);
   }
 
@@ -40,14 +41,18 @@ function App() {
     setEditTaskPrompt(<></>);
   }
 
-  //debug function
   //GET request for all
   function logTasks() {
     //for testing purposes hardcode user "Seij"
-    fetch(userDataEndpoint + "/user/" + userName, {
+    fetch(`${userDataEndpoint}/user/${userName}`, {
       method: "GET",
+      headers: {
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+      },
     }).then((response) => {
       response.json().then(a => {
+        console.log(a);
         setUserTasks(a.tasks); //update all tasks
         setVisibleTasks(a.tasks); //by default display all tasks in order of oldest -> newest
       })
@@ -73,10 +78,10 @@ function App() {
       console.log(response);
       response.json().then(jsonData => {
         if(response["status"] === 201) {
+          console.log("user registered");
           setUserID(jsonData["id"]);
         }
         console.log(jsonData);
-        setUserID(jsonData["id"]);
       })
     })
   }
@@ -112,22 +117,14 @@ function App() {
     }  
   }
 
-  useEffect(() => {
-    fetch("https://lighthall-task-app.onrender.com/user", {
-      method: "GET",
-    }).then((response => {
-      response.json().then((responseData) => {
-        //
-        console.log(responseData);
-      })
-    }))
-  }, [userID]);
-
   return (
     <div className="App">
       <br></br>
       {editTaskPrompt}
       <br></br>
+      <div>
+        {userName}
+      </div>
 
       <button onClick={registerUser}>
         register user (debug)
@@ -138,6 +135,7 @@ function App() {
       <button onClick={createNewTask}>
         + Create New Task
       </button>
+      <div>
       Sort tasks by:
       <select value={sortField} onChange={e => 
           {
@@ -150,7 +148,7 @@ function App() {
         <option value="completionStatus">Completion Status</option>
         <option value="description">Description</option>
       </select>
-      <button onClick={e => 
+      <button onClick={() => 
         {
           const newAscendingValue = !sortAscending;
           setSortAscending(newAscendingValue);
@@ -159,6 +157,8 @@ function App() {
       }>
         sort {sortAscending ? "descending" : "ascending"}
       </button>
+      </div>
+      
       {visibleTasks && (<div className = "taskList">
         {visibleTasks.map( (task, index) =>
           <Task userDataEndpoint={userDataEndpoint} task={task} key={task.id ? task.id : index}></Task>

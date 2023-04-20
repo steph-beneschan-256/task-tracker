@@ -17,6 +17,8 @@ export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID
     // for <select> element
     const [usingCustomDueDate, setUsingCustomDueDate] = useState(false);
 
+    const [statusMsg, setStatusMsg] = useState("");
+
     /*
     Validate the input date string from the <input type="date"> element.
 
@@ -51,6 +53,7 @@ export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID
                 "dueDate": dueDate,
                 "userId": userID
             }
+            console.log(newTaskData);
 
             fetch(`${userDataEndpoint}/task${taskID ? `/${taskID}` : ""}`, {
                 method: (taskID ? "PUT" : "POST"),
@@ -63,8 +66,14 @@ export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID
                 })
               }).then(response => {
                 console.log(response);
-                // Inform the parent component that the data has been saved
-                onTaskSaved(newTaskData);
+                if(response["status"] === 201) {
+                    // Inform the parent component that the data has been saved
+                    onTaskSaved(newTaskData);
+                }
+                else {
+                    console.log("Could not save data");
+                    setStatusMsg(response["statusText"]);
+                }
                 //TODO: error handling
               })
 
@@ -150,6 +159,9 @@ export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID
                     <button className="task-save-button" onClick={saveTask}>
                         Save
                     </button>
+                </div>
+                <div>
+                    {(statusMsg !== "") && statusMsg}
                 </div>
         </div>
     )
