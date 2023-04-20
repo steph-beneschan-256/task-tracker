@@ -68,9 +68,9 @@ export default function LoginBar({onLoggedIn, dataEndpoint}) {
     }
 
     return(
-        <div>
+        <div className="log-in-bar">
             <div>
-                <input type="text" value={userName}
+                <input type="text" className="username-field" value={userName}
                 placeholder="Username"
                 onChange={e => setUserName(e.target.value)} />
                 <button onClick={logInButtonPressed}>

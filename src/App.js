@@ -11,8 +11,8 @@ const userDataEndpoint = "https://lighthall-task-app.onrender.com";
 
 function App() {
   // Name and ID of currently logged-in user
-  const [userName, setUserName] = useState("user1"); //placeholder user name
-  const [userID, setUserID] = useState("bf6ab62a-dfaf-4245-bf5c-003151a2eab0"); //using placeholder ID for testing
+  const [userName, setUserName] = useState(""); //placeholder user name
+  const [userID, setUserID] = useState(""); //using placeholder ID for testing
   const [editTaskPrompt, setEditTaskPrompt] = useState(<></>);
   const [userTasks, setUserTasks] = useState([]);
   const [visibleTasks, setVisibleTasks] = useState([]); //visible tasks displayed on screen, should be pre-sorted
@@ -53,6 +53,13 @@ function App() {
     setVisibleTasks(data["tasks"]);
   }
 
+  function loggedOut() {
+    setUserName("");
+    setUserID("");
+    setUserTasks([]);
+    setVisibleTasks([]);
+  }
+
   //GET request for all
   function logTasks() {
     //for testing purposes hardcode user "Seij"
@@ -70,32 +77,6 @@ function App() {
       })
     });
 
-  }
-
-  //debug function
-  function registerUser() {
-    fetch("https://lighthall-task-app.onrender.com/user", {
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-      "body": JSON.stringify({
-        "user": {
-          "name": userName
-        }
-      })
-      
-    }).then((response) => {
-      console.log(response);
-      response.json().then(jsonData => {
-        if(response["status"] === 201) {
-          console.log("user registered");
-          setUserID(jsonData["id"]);
-        }
-        console.log(jsonData);
-      })
-    })
   }
 
   // Compare two tasks based on a given field
@@ -142,17 +123,18 @@ function App() {
 
   return (
     <div className="App">
-      <LoginBar onLoggedIn={loggedIn} dataEndpoint={userDataEndpoint} />
+      { !userID ?
+        (<LoginBar onLoggedIn={loggedIn} dataEndpoint={userDataEndpoint} />)
+        : (<div>
+            Logged in as {userName}
+            <button onClick={loggedOut}>Sign Out</button>
+          </div>)
+      }
+      
       <br></br>
       {editTaskPrompt}
       <br></br>
-      <div>
-        {userName}
-      </div>
 
-      <button onClick={registerUser}>
-        register user (debug)
-      </button>
       <button onClick={logTasks}>
       Show All Tasks
       </button>
