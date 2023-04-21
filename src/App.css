@@ -151,14 +151,16 @@
   text-align:center;
 }
 
-.complete {
+/* the 'completed' and 'inProgress' styles are toggled automatically when user clicks button*/
+.completed {
   background-color:#dddddd;
 }
 
-.incomplete {
-  background-color:#f4fab6;
+.inProgress {
+  background-color:#cbdcf7;
 }
 
+/* 'transparent' is toggled in the textarea in the form when user clicks the pencil icon */
 .transparent {
   background-color: transparent;
 }
