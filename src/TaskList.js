@@ -31,7 +31,7 @@ export default function TaskList({userDataEndpoint, userTasks, logTasks}) {
         default:
             return taskA[taskSortField].localeCompare(taskB[taskSortField]);
         }
-    } 
+    }
 
     // Sort the user's tasks and update the UI accordingly
     function sortTasks(tasks, taskSortField, isAscending) {
@@ -48,13 +48,13 @@ export default function TaskList({userDataEndpoint, userTasks, logTasks}) {
           console.log("sorted the tasks");
           console.log(tasksSorted);
           return tasksSorted;
-        }  
+        }
         return [];
     }
 
     return(
         <div>
-            <div>
+            <div className='centeredItems'>
                 Sort tasks by:
                 <select value={sortField} onChange={e => setSortField(e.target.value)}>
                     <option value="title">Title</option>

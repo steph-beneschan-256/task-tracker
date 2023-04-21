@@ -41,6 +41,27 @@
   width: 100%;
   height: 1px;
 }
+/* ------------ Button Styling ------ */
+button {
+  pointer-events:auto;
+  width: auto;
+  height: 1.5rem;
+  /* height: 5vw; */
+  max-height: 40px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgb(100, 100, 198);
+  color: white;
+  margin-left:1rem;
+  margin-right:1rem;
+}
+
+button:hover {
+
+  cursor:pointer;
+  background-color:#cbdcf7;
+  color:black;
+}
 
 /* ----------- Log-In Bar -----------*/
 .log-in-bar {
@@ -83,12 +104,29 @@
   color: white;
 }
 
+/* ------- Header once user is logged in -------*/
+.currentUser {
+  margin:auto;
+  display:flex;
+  justify-content:center;
+}
+
+.centeredItems {
+  margin:auto;
+  display:flex;
+  justify-content:center;
+  margin-top:1rem;
+  margin-bottom:1rem;
+}
+
 /* ------- Task Creation Form -------*/
 .task-creator {
   background-color: #dddddd;
   padding: 20px;
   border-radius: 20px;
   max-width: 800px;
+  margin:auto;
+  margin-top:1rem;
 }
 
 .task-creator h3 {
@@ -153,55 +191,57 @@ textarea {
 
 /* ------------Task List ------------*/
 .taskList {
-  display: flex;
+  display:flex;
   flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 10px;
-  margin: auto;
-  background-color: beige;
-  padding: 1%;
+  align-content:flex-start;
+  gap:10px;
+  margin:auto;
+  padding:1%;
 }
 .task {
-  padding: 3px;
-  background-color: #dddddd;
-  width: 30%;
-  max-width: 300px;
-  height: auto;
-  box-sizing: border-box;
+  border-radius:10%;
+  padding:2%;
+  background-color:#dddddd;
+  width:30%;
+  max-width:300px;
+  height:auto;
+  box-sizing:border-box;
 }
 
 .task form {
-  box-sizing: border-box;
+  box-sizing:border-box;
 }
 
-.task form textarea {
-  box-sizing: border-box;
-  border: none;
-  resize: none;
+.task form textarea{
+  box-sizing:border-box;
+  border:none;
+  resize:none;
 }
 
-.task form button {
-  height: auto;
-  text-align: center;
-  margin: auto;
+.task form button{
+  height:auto;
+  text-align:center;
+  margin:auto;
 }
 
 .description {
-  height: 10rem;
+  height:10rem;
 }
 
 .text-center {
-  text-align: center;
+  text-align:center;
 }
 
-.complete {
-  background-color: #dddddd;
+/* the 'completed' and 'inProgress' styles are toggled automatically when user clicks button*/
+.completed {
+  background-color:#dddddd;
 }
 
-.incomplete {
-  background-color: #f4fab6;
+.inProgress {
+  background-color:#cbdcf7;
 }
 
+/* 'transparent' is toggled in the textarea in the form when user clicks the pencil icon */
 .transparent {
   background-color: transparent;
 }
@@ -215,9 +255,31 @@ textarea {
 }
 
 .flex {
-  display: flex;
+  display:flex;
   justify-content: flex-start;
-  gap: 5px;
+  gap:5px;
+}
+
+.saveChangeButton {
+  width:auto;
+  height:auto;
+  background-color:greenyellow;
+  color:black;
+}
+
+.saveChangeButton:hover {
+  background-color:#31f013;
+}
+
+.cancelChangeButton {
+  width:auto;
+  height:auto;
+  background-color:pink;
+  color:black;
+}
+
+.cancelChangeButton:hover{
+  background-color:red;
 }
 
 /*---------------- Loader ---------------- */

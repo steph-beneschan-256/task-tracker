@@ -3,21 +3,16 @@ import { useState } from 'react';
 export default function Task({task, userDataEndpoint, logTasks}) {
   //this component is for a single task element
 
-  //clicking the pencil icon will:
-  //1: change styling behind text to white
-  //2: allow user to modify text with white background
-  //3:display a 'save changes' button that will submit task data to PUT
-
   const defaultTask = {
     title: task.title,
     description: task.description,
     dueDate: task.dueDate,
-    completionStatus: task.completionStatus
   };
 
   const [data, setData] = useState(defaultTask)
   const [bgColorClass, setBgColorClass] = useState('transparent');
   const [readOnly, setReadOnly] = useState(true);
+  const [isComplete, setIsComplete] = useState(task.completionStatus);
 
   const changeHandler = e => {
     setData( prevData => {
@@ -25,11 +20,14 @@ export default function Task({task, userDataEndpoint, logTasks}) {
     })
   }
 
-  const saveChangesHandler = () => {
+  const saveChangesHandler = (completed = isComplete) => {
     //submit a PUT request with current form values
+    console.log({data});
+    var bodyData = {task: {...data, completionStatus: completed}};
+    console.log(bodyData);
     fetch(userDataEndpoint + "/task/" + task.id, {
       method: "PUT",
-      body: JSON.stringify({task: data}),
+      body: JSON.stringify(bodyData),
       headers: {
         'Accept': 'application/json;charset=utf-8',
         'Content-Type': 'application/json;charset=utf-8'
@@ -64,18 +62,32 @@ export default function Task({task, userDataEndpoint, logTasks}) {
     setReadOnly(!readOnly);
     setBgColorClass(bgColorClass === 'transparent' ? 'white' : 'transparent');
   }
+
+  const completedClickHandler = () => {
+    if (isComplete === 'inProgress') {
+      setIsComplete('completed');
+      saveChangesHandler('completed');
+    } else {
+      setIsComplete('inProgress');
+      saveChangesHandler('inProgress');
+    }
+  }
+
   return (
-    <div className='task'>
+    <div className={`task ${isComplete}`}>
       <form onChange={changeHandler}>
         <textarea   className={bgColorClass} readOnly={readOnly} name='title' value={data.title}></textarea>
         <textarea  className={bgColorClass+' description'} readOnly={readOnly} name='description' value={data.description}></textarea>
-        <textarea  className={bgColorClass} readOnly={readOnly} name='dueDate' value={data.dueDate}></textarea>
-        <textarea  className={bgColorClass} readOnly={readOnly} name='completionStatus' value={data.completionStatus}></textarea>
+        <label>Due By:</label><textarea  className={bgColorClass} readOnly={readOnly} name='dueDate' value={data.dueDate}></textarea>
       </form>
+      <label className='flex'>
+        <p>Completed?</p>
+        <input type='checkbox' checked={(isComplete === 'completed') ? true : false} onChange={completedClickHandler} />
+      </label>
       <div className="flex">
         <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
-        {!readOnly ? <button className='cursor-pointer' onClick={saveChangesHandler}>Save Changes</button> : null}
-        {!readOnly ? <button className='cursor-pointer' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
+        {!readOnly ? <button className='cursor-pointer saveChangeButton' onClick={saveChangesHandler}>Save Changes</button> : null}
+        {!readOnly ? <button className='cursor-pointer cancelChangeButton' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
       </div>
     </div>
   )

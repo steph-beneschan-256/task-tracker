@@ -88,7 +88,7 @@ function App() {
           <LoginBar onLoggedIn={loggedIn} dataEndpoint={userDataEndpoint} setUserDataLS={setUserDataLS} userDataLS={userDataLS} />
         </div>
       ) : (
-        <div>
+        <div className='currentUser'>
           Logged in as {userName}
           <button onClick={loggedOut}>Sign Out</button>
         </div>
@@ -96,13 +96,11 @@ function App() {
 
       {userID && (
         <>
-          <br></br>
           {editTaskPrompt}
-          <br></br>
-
-          <button onClick={logTasks}>Show All Tasks</button>
-          <button onClick={createNewTask}>+ Create New Task</button>
-
+          <div className = 'centeredItems'>
+            <button onClick={logTasks}>Show All Tasks</button>
+            <button onClick={createNewTask}>+ Create New Task</button>
+          </div>
           {userID ? (
             <div>
               <TaskList
