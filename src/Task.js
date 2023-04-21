@@ -23,6 +23,7 @@ export default function Task({task, userDataEndpoint, logTasks}) {
   }
 
   const saveChangesHandler = (completed = isComplete) => {
+    console.log(completed);
     //submit a PUT request with current form values
     console.log({data});
     var bodyData = {task: {...data, completionStatus: completed}};
@@ -84,7 +85,7 @@ export default function Task({task, userDataEndpoint, logTasks}) {
       </form>
       <label className='flex'>
         <p>Completion Status:</p>
-        <select value={isComplete} onChange={e => setIsComplete(e.target.value)}>
+        <select value={isComplete} onChange={e => {setIsComplete(e.target.value.toString()); saveChangesHandler(e.target.value.toString())}}>
           {
             completionStatuses.map((status, index) => {
               return(<option value={status}>{status}</option>)
@@ -96,7 +97,7 @@ export default function Task({task, userDataEndpoint, logTasks}) {
       </label>
       <div className="flex">
         <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
-        {!readOnly ? <button className='cursor-pointer saveChangeButton' onClick={saveChangesHandler}>Save Changes</button> : null}
+        {!readOnly ? <button className='cursor-pointer saveChangeButton' onClick={e => saveChangesHandler(isComplete)}>Save Changes</button> : null}
         {!readOnly ? <button className='cursor-pointer cancelChangeButton' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
       </div>
     </div>
