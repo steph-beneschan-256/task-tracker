@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const completionStatusMsgs = ["To-Do", "In-Progress", "Completed"];
+
 export default function Task({task, userDataEndpoint, logTasks}) {
   //this component is for a single task element
 
@@ -63,14 +65,9 @@ export default function Task({task, userDataEndpoint, logTasks}) {
     setBgColorClass(bgColorClass === 'transparent' ? 'white' : 'transparent');
   }
 
-  const completedClickHandler = () => {
-    if (isComplete === 'inProgress') {
-      setIsComplete('completed');
-      saveChangesHandler('completed');
-    } else {
-      setIsComplete('inProgress');
-      saveChangesHandler('inProgress');
-    }
+  const completedClickHandler = (e) => {
+    setIsComplete(e.target.value);
+    saveChangesHandler(e.target.value);
   }
 
   return (
@@ -82,7 +79,11 @@ export default function Task({task, userDataEndpoint, logTasks}) {
       </form>
       <label className='flex'>
         <p>Completed?</p>
-        <input type='checkbox' checked={(isComplete === 'completed') ? true : false} onChange={completedClickHandler} />
+        <select value={isComplete} onChange={e => completedClickHandler(e)}>
+          <option value=0>To-Do</option>
+          <option value=1>In-Progress</option>
+          <option value=2>Completed</option>
+        </select>
       </label>
       <div className="flex">
         <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
