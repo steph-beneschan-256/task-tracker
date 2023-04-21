@@ -260,6 +260,7 @@ textarea {
   gap:5px;
 }
 
+
 .saveChangeButton {
   width:auto;
   height:auto;
@@ -336,3 +337,4 @@ textarea {
     transform: rotate(360deg);
   }
 }
+
