@@ -1,5 +1,27 @@
+/* ---------------- App.js ---------------*/
+
 .App {
   padding: 2vw;
+}
+
+.loggedOut {
+  background-color: rgb(234, 234, 234);
+  display: flex;
+  height: 100vh;
+  height: 100svh;
+  justify-content: center;
+  align-items: center;
+}
+
+#loginBarContainer {
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  height: 25vh;
+  width: 90%;
+  max-width: 400px;
+  /* width: 100%;
+  height: 100%; */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -18,27 +40,83 @@
   background-color: black;
   width: 100%;
   height: 1px;
+}
+/* ------------ Button Styling ------ */
+button {
+  pointer-events:auto;
+  width: auto;
+  height: 1.5rem;
+  /* height: 5vw; */
+  max-height: 40px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgb(100, 100, 198);
+  color: white;
+  margin-left:1rem;
+  margin-right:1rem;
+}
 
+button:hover {
+
+  cursor:pointer;
+  background-color:#cbdcf7;
+  color:black;
 }
 
 /* ----------- Log-In Bar -----------*/
 .log-in-bar {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
+.loginBarContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 60%;
+  width: 100%;
+  padding: 20px;
+  max-height: 400px;
+}
+
 .log-in-bar .username-field {
   width: 65%;
-  height: 5vw;
-  max-height: 30px;
-  border-radius: 50px;
+  height: 20vw;
+  max-height: 40px;
+  border-radius: 10px;
   text-indent: 5%;
-  border: solid 1px;
-
+  border: solid 3px rgb(100, 100, 198);
+  box-sizing: border-box;
 }
+
 .log-in-bar button {
-  width: 25%;
-  height: 5vw;
-  max-height: 30px;
-  border-radius: 5px;
+  width: 65%;
+  height: 20vw;
+  /* height: 5vw; */
+  max-height: 40px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgb(100, 100, 198);
+  color: white;
+}
+
+/* ------- Header once user is logged in -------*/
+.currentUser {
+  margin:auto;
+  display:flex;
+  justify-content:center;
+}
+
+.centeredItems {
+  margin:auto;
+  display:flex;
+  justify-content:center;
+  margin-top:1rem;
+  margin-bottom:1rem;
 }
 
 /* ------- Task Creation Form -------*/
@@ -47,6 +125,8 @@
   padding: 20px;
   border-radius: 20px;
   max-width: 800px;
+  margin:auto;
+  margin-top:1rem;
 }
 
 .task-creator h3 {
@@ -63,7 +143,8 @@
   font-size: small;
 }
 
-.task-creator input, textarea {
+.task-creator input,
+textarea {
   width: 100%;
   font-size: large;
 }
@@ -115,11 +196,11 @@
   align-content:flex-start;
   gap:10px;
   margin:auto;
-  background-color:beige;
   padding:1%;
 }
 .task {
-  padding:3px;
+  border-radius:10%;
+  padding:2%;
   background-color:#dddddd;
   width:30%;
   max-width:300px;
@@ -178,3 +259,82 @@
   justify-content: flex-start;
   gap:5px;
 }
+
+
+.saveChangeButton {
+  width:auto;
+  height:auto;
+  background-color:greenyellow;
+  color:black;
+}
+
+.saveChangeButton:hover {
+  background-color:#31f013;
+}
+
+.cancelChangeButton {
+  width:auto;
+  height:auto;
+  background-color:pink;
+  color:black;
+}
+
+.cancelChangeButton:hover{
+  background-color:red;
+}
+
+/*---------------- Loader ---------------- */
+.loader {
+  color: #bfbfbf;
+  font-size: 45px;
+  text-indent: -9999em;
+  overflow: hidden;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  position: relative;
+  transform: translateZ(0);
+  animation: mltShdSpin 1.7s infinite ease, round 1.7s infinite ease;
+}
+
+@keyframes mltShdSpin {
+  0% {
+    box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+      0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+  5%,
+  95% {
+    box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+      0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+  10%,
+  59% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em,
+      -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em,
+      -0.297em -0.775em 0 -0.477em;
+  }
+  20% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em,
+      -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em,
+      -0.749em -0.34em 0 -0.477em;
+  }
+  38% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em,
+      -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em,
+      -0.82em -0.09em 0 -0.477em;
+  }
+  100% {
+    box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+      0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+}
+
+@keyframes round {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
