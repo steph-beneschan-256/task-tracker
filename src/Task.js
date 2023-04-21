@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const completionStatuses = ["To-Do", "In-Progress", "Completed"];
+
 export default function Task({task, userDataEndpoint, logTasks}) {
   //this component is for a single task element
 
@@ -63,15 +65,15 @@ export default function Task({task, userDataEndpoint, logTasks}) {
     setBgColorClass(bgColorClass === 'transparent' ? 'white' : 'transparent');
   }
 
-  const completedClickHandler = () => {
-    if (isComplete === 'inProgress') {
-      setIsComplete('completed');
-      saveChangesHandler('completed');
-    } else {
-      setIsComplete('inProgress');
-      saveChangesHandler('inProgress');
-    }
-  }
+  // const completedClickHandler = () => {
+  //   if (isComplete === 'inProgress') {
+  //     setIsComplete('completed');
+  //     saveChangesHandler('completed');
+  //   } else {
+  //     setIsComplete('inProgress');
+  //     saveChangesHandler('inProgress');
+  //   }
+  // }
 
   return (
     <div className={`task ${isComplete}`}>
@@ -81,8 +83,16 @@ export default function Task({task, userDataEndpoint, logTasks}) {
         <label>Due By:</label><textarea  className={bgColorClass} readOnly={readOnly} name='dueDate' value={data.dueDate}></textarea>
       </form>
       <label className='flex'>
-        <p>Completed?</p>
-        <input type='checkbox' checked={(isComplete === 'completed') ? true : false} onChange={completedClickHandler} />
+        <p>Completion Status:</p>
+        <select value={isComplete} onChange={e => setIsComplete(e.target.value)}>
+          {
+            completionStatuses.map((status, index) => {
+              return(<option value={status}>{status}</option>)
+            })
+          }
+          <option value="To-Do"></option>
+        </select>
+        {/* <input type='checkbox' checked={(isComplete === 'completed') ? true : false} onChange={completedClickHandler} /> */}
       </label>
       <div className="flex">
         <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
