@@ -86,8 +86,8 @@ export default function Task({task, userDataEndpoint, logTasks}) {
       </label>
       <div className="flex">
         <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
-        {!readOnly ? <button className='cursor-pointer' onClick={saveChangesHandler}>Save Changes</button> : null}
-        {!readOnly ? <button className='cursor-pointer' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
+        {!readOnly ? <button className='cursor-pointer saveChangeButton' onClick={saveChangesHandler}>Save Changes</button> : null}
+        {!readOnly ? <button className='cursor-pointer cancelChangeButton' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
       </div>
     </div>
   )
