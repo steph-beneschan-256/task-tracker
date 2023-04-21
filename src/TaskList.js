@@ -23,11 +23,7 @@ export default function TaskList({userDataEndpoint, userTasks, logTasks}) {
             return new Date(valueA) - new Date(valueB);
         case "completionStatus":
             // Sort by completion status; completed tasks come later
-            if(valueA === valueB)
-            return 0;
-            else if(valueA === "inProgress")
-            return -1;
-            return 1;
+            return valueA - valueB;
         default:
             return taskA[taskSortField].localeCompare(taskB[taskSortField]);
         }
