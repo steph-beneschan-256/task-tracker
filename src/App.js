@@ -1,12 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
-import TaskCreator from './taskCreator';
-import Task from './Task';
-import LoginBar from './LoginBar';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { render } from '@testing-library/react';
-import TaskList from './TaskList';
+import logo from "./logo.svg";
+import "./App.css";
+import TaskCreator from "./taskCreator";
+import Task from "./Task";
+import LoginBar from "./LoginBar";
+import { useState } from "react";
+import { useEffect } from "react";
+import { render } from "@testing-library/react";
+import TaskList from "./TaskList";
+import useLocalStorage from "./useLocalStorage";
 let taskData = require("./sampleTaskData.json");
 const userDataEndpoint = "https://lighthall-task-app.onrender.com";
 
@@ -16,11 +17,22 @@ function App() {
   const [userID, setUserID] = useState(""); //using placeholder ID for testing
   const [editTaskPrompt, setEditTaskPrompt] = useState(<></>);
   const [userTasks, setUserTasks] = useState([]);
+  const [userDataLS, setUserDataLS] = useLocalStorage(null, "userData")
 
-  function showEditForm(taskID=null, taskData=null) {
+  useEffect(() => {
+    console.log(userDataLS)
+  },[userDataLS]);
+
+  function showEditForm(taskID = null, taskData = null) {
     setEditTaskPrompt(
-      <TaskCreator onTaskSaved={taskSaved} onEditCanceled={taskEditCanceled} userID={userID} taskID={taskID} taskData={taskData}/>
-    )
+      <TaskCreator
+        onTaskSaved={taskSaved}
+        onEditCanceled={taskEditCanceled}
+        userID={userID}
+        taskID={taskID}
+        taskData={taskData}
+      />
+    );
   }
 
   function createNewTask() {
@@ -46,6 +58,7 @@ function App() {
   }
 
   function loggedOut() {
+    setUserDataLS(null)
     setUserName("");
     setUserID("");
     setUserTasks([]);
@@ -57,47 +70,52 @@ function App() {
     fetch(`${userDataEndpoint}/user/${userName}`, {
       method: "GET",
       headers: {
-        "Accept": "*/*",
-        "Connection": "keep-alive",
+        Accept: "*/*",
+        Connection: "keep-alive",
       },
     }).then((response) => {
-      response.json().then(a => {
+      response.json().then((a) => {
         console.log(a);
         setUserTasks(a.tasks); //update all tasks for the UI
-      })
+      });
     });
-
   }
 
   return (
-    <div className="App">
-      { !userID ?
-        (<LoginBar onLoggedIn={loggedIn} dataEndpoint={userDataEndpoint} />)
-        : (<div>
-            Logged in as {userName}
-            <button onClick={loggedOut}>Sign Out</button>
-          </div>)
-      }
-      
-      <br></br>
-      {editTaskPrompt}
-      <br></br>
+    <div className={`App ${!userID ? "loggedOut" : "loggedIn"}`}>
+      {!userID ? (
+        <div id="loginBarContainer">
+          <LoginBar onLoggedIn={loggedIn} dataEndpoint={userDataEndpoint} setUserDataLS={setUserDataLS} userDataLS={userDataLS} />
+        </div>
+      ) : (
+        <div>
+          Logged in as {userName}
+          <button onClick={loggedOut}>Sign Out</button>
+        </div>
+      )}
 
-      <button onClick={logTasks}>
-      Show All Tasks
-      </button>
-      <button onClick={createNewTask}>
-        + Create New Task
-      </button>
+      {userID && (
+        <>
+          <br></br>
+          {editTaskPrompt}
+          <br></br>
 
-      {userID ? (<div>
-        <TaskList logTasks={logTasks} userDataEndpoint={userDataEndpoint} userTasks={userTasks}/>
-      </div>)
-      : 
-      (<div>
-        Please log in to view and edit your tasks.
-      </div>)}
+          <button onClick={logTasks}>Show All Tasks</button>
+          <button onClick={createNewTask}>+ Create New Task</button>
 
+          {userID ? (
+            <div>
+              <TaskList
+                logTasks={logTasks}
+                userDataEndpoint={userDataEndpoint}
+                userTasks={userTasks}
+              />
+            </div>
+          ) : (
+            <div>Please log in to view and edit your tasks.</div>
+          )}
+        </>
+      )}
     </div>
   );
 }
