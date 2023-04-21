@@ -49,7 +49,7 @@ export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID
             const newTaskData = {
                 "title": title,
                 "description": description,
-                "completionStatus": "inProgress",
+                "completionStatus": "To-Do",
                 "dueDate": dueDate,
                 "userId": userID
             }

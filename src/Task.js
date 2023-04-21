@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const completionStatuses = ["To-Do", "In-Progress", "Completed"];
+
 export default function Task({task, userDataEndpoint, logTasks}) {
   //this component is for a single task element
 
@@ -21,6 +23,7 @@ export default function Task({task, userDataEndpoint, logTasks}) {
   }
 
   const saveChangesHandler = (completed = isComplete) => {
+    console.log(completed);
     //submit a PUT request with current form values
     console.log({data});
     var bodyData = {task: {...data, completionStatus: completed}};
@@ -63,15 +66,15 @@ export default function Task({task, userDataEndpoint, logTasks}) {
     setBgColorClass(bgColorClass === 'transparent' ? 'white' : 'transparent');
   }
 
-  const completedClickHandler = () => {
-    if (isComplete === 'inProgress') {
-      setIsComplete('completed');
-      saveChangesHandler('completed');
-    } else {
-      setIsComplete('inProgress');
-      saveChangesHandler('inProgress');
-    }
-  }
+  // const completedClickHandler = () => {
+  //   if (isComplete === 'inProgress') {
+  //     setIsComplete('completed');
+  //     saveChangesHandler('completed');
+  //   } else {
+  //     setIsComplete('inProgress');
+  //     saveChangesHandler('inProgress');
+  //   }
+  // }
 
   return (
     <div className={`task ${isComplete}`}>
@@ -81,12 +84,20 @@ export default function Task({task, userDataEndpoint, logTasks}) {
         <label>Due By:</label><textarea  className={bgColorClass} readOnly={readOnly} name='dueDate' value={data.dueDate}></textarea>
       </form>
       <label className='flex'>
-        <p>Completed?</p>
-        <input type='checkbox' checked={(isComplete === 'completed') ? true : false} onChange={completedClickHandler} />
+        <p>Completion Status:</p>
+        <select value={isComplete} onChange={e => {setIsComplete(e.target.value.toString()); saveChangesHandler(e.target.value.toString())}}>
+          {
+            completionStatuses.map((status, index) => {
+              return(<option value={status}>{status}</option>)
+            })
+          }
+          <option value="To-Do"></option>
+        </select>
+        {/* <input type='checkbox' checked={(isComplete === 'completed') ? true : false} onChange={completedClickHandler} /> */}
       </label>
       <div className="flex">
         <img className='cursor-pointer' src="pencil.png" onClick={editClickHandler} alt="edit"></img>
-        {!readOnly ? <button className='cursor-pointer saveChangeButton' onClick={saveChangesHandler}>Save Changes</button> : null}
+        {!readOnly ? <button className='cursor-pointer saveChangeButton' onClick={e => saveChangesHandler(isComplete)}>Save Changes</button> : null}
         {!readOnly ? <button className='cursor-pointer cancelChangeButton' onClick={cancelChangesHandler}>Cancel Changes</button> : null}
       </div>
     </div>
