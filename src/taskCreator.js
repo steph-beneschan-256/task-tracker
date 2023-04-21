@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { database } from "./firebaseData/firebase";
+import { ref, get, update, push, child } from "firebase/database";
 
 const userDataEndpoint = "https://lighthall-task-app.onrender.com";
 
@@ -10,7 +12,7 @@ Notes:
 * rewrite component to allow for editing as well as creating tasks; could receive taskData object as prop along with taskID
 */
 
-export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID, taskData}) {
+export default function TaskCreator({onTaskSaved, onEditCanceled, userID, userName, taskID, taskData}) {
     const [title, setTitle] = useState(taskData ? taskData["title"] : "");
     const [description, setDescription] = useState(taskData ? taskData["description"] : "");
     const [dueDate, setDueDate] = useState(taskData ? taskData["dueDate"] : "");
@@ -46,35 +48,51 @@ export default function TaskCreator({onTaskSaved, onEditCanceled, userID, taskID
     function saveTask() {
         // Ensure that due date is null or valid
         if((!dueDate) || isValidDate(dueDate)) {
+            
+
+            const newTaskID = push(child(ref(database, `user/${userName}/`), "tasks")).key;
             const newTaskData = {
                 "title": title,
                 "description": description,
-                "completionStatus": "inProgress",
+                "completionStatus": 0,
                 "dueDate": dueDate,
-                "userId": userID
+                "userId": userID,
+                "taskID": newTaskID
             }
             console.log(newTaskData);
+            let taskUpdate = {};
+            
+            taskUpdate[`user/${userName}/tasks/${newTaskID}`] = {
+                ...newTaskData
+            };
 
-            fetch(`${userDataEndpoint}/task${taskID ? `/${taskID}` : ""}`, {
-                method: (taskID ? "PUT" : "POST"),
-                headers: {
-                  "Accept": "application/json",
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  "task": newTaskData
-                })
-              }).then(response => {
-                console.log(response);
-                if(response["status"] === 201) {
-                    // Inform the parent component that the data has been saved
-                    onTaskSaved(newTaskData);
-                }
-                else {
-                    console.log("Could not save data");
-                    setStatusMsg(response["statusText"]);
-                }
-              })
+            update(ref(database), taskUpdate).then(() => {
+                onTaskSaved(newTaskData);
+            },
+            () => {
+                setStatusMsg("error occurred");
+            });
+
+            // fetch(`${userDataEndpoint}/task${taskID ? `/${taskID}` : ""}`, {
+            //     method: (taskID ? "PUT" : "POST"),
+            //     headers: {
+            //       "Accept": "application/json",
+            //       "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({
+            //       "task": newTaskData
+            //     })
+            //   }).then(response => {
+            //     console.log(response);
+            //     if(response["status"] === 201) {
+            //         // Inform the parent component that the data has been saved
+            //         onTaskSaved(newTaskData);
+            //     }
+            //     else {
+            //         console.log("Could not save data");
+            //         setStatusMsg(response["statusText"]);
+            //     }
+            //   })
 
         }
     }

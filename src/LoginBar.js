@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
+import { database } from "./firebaseData/firebase";
+import { ref, get, push, child, update } from "firebase/database";
 
 export default function LoginBar({
   onLoggedIn,
@@ -12,6 +14,36 @@ export default function LoginBar({
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
 
   async function getUserData() {
+
+    const udata = await get(ref(database, `/user/` + userName)).then((snapshot) => {
+      if(snapshot.exists()) {
+        if(snapshot.val()) {
+          const userID = snapshot.val()["id"];
+          const tasks = snapshot.val()["tasks"];
+          return {id: userID, tasks: tasks};
+        }
+        return null;
+      }
+    })
+    if(udata)
+      return udata;
+
+    console.log("why");
+
+    // user does not exist yet; must create
+    const newUserID = push(child(ref(database), "user")).key;
+    console.log(newUserID);
+    console.log('what');
+    const userUpdate = {};
+    userUpdate["/user/" + userName] = {
+      "user": userName,
+      "id": newUserID,
+      "tasks": []
+    };
+    update(ref(database), userUpdate);
+    console.log("a");
+    return {id: newUserID, tasks: []};
+
     console.log("llamada")
     let response1 = await fetch(`${dataEndpoint}/user/${userName}`, {
       method: "GET",

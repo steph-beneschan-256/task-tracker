@@ -8,8 +8,11 @@ import { useEffect } from "react";
 import { render } from "@testing-library/react";
 import TaskList from "./TaskList";
 import useLocalStorage from "./useLocalStorage";
+import { database } from "./firebaseData/firebase";
+import { ref, get } from "firebase/database";
 let taskData = require("./sampleTaskData.json");
 const userDataEndpoint = "https://lighthall-task-app.onrender.com";
+
 
 function App() {
   // Name and ID of currently logged-in user
@@ -29,6 +32,7 @@ function App() {
         onTaskSaved={taskSaved}
         onEditCanceled={taskEditCanceled}
         userID={userID}
+        userName={userName}
         taskID={taskID}
         taskData={taskData}
       />
@@ -67,18 +71,35 @@ function App() {
   //GET request for all
   function logTasks() {
     //for testing purposes hardcode user "Seij"
-    fetch(`${userDataEndpoint}/user/${userName}`, {
-      method: "GET",
-      headers: {
-        Accept: "*/*",
-        Connection: "keep-alive",
-      },
-    }).then((response) => {
-      response.json().then((a) => {
+    console.log("non onon");
+
+    get(ref(database, `/user/${userName}`)).then((snapshot) => {
+      if(snapshot.exists()) {
+        const tasks = snapshot.val()["tasks"];
+        console.log(tasks);
+        console.log(Object.keys(tasks));
+        const a = Object.keys(tasks).map((taskID) => {
+          return tasks[taskID];
+        });
         console.log(a);
-        setUserTasks(a.tasks); //update all tasks for the UI
-      });
-    });
+        setUserTasks(a);
+        //
+      }
+    })
+
+
+    // fetch(`${userDataEndpoint}/user/${userName}`, {
+    //   method: "GET",
+    //   headers: {
+    //     Accept: "*/*",
+    //     Connection: "keep-alive",
+    //   },
+    // }).then((response) => {
+    //   response.json().then((a) => {
+    //     console.log(a);
+    //     setUserTasks(a.tasks); //update all tasks for the UI
+    //   });
+    // });
   }
 
   return (
@@ -107,6 +128,7 @@ function App() {
                 logTasks={logTasks}
                 userDataEndpoint={userDataEndpoint}
                 userTasks={userTasks}
+                userName={userName}
               />
             </div>
           ) : (

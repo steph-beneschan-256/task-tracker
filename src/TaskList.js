@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Task from "./Task";
 
-export default function TaskList({userDataEndpoint, userTasks, logTasks}) {
+export default function TaskList({userDataEndpoint, userName, userTasks, logTasks}) {
 
     const sortFieldPriority = ["completionStatus", "dueDate", "title", "description"]; // Task field priorities for tie breaking
     const [sortField, setSortField] = useState(sortFieldPriority[0]); //field by which to sort the tasks
@@ -66,7 +66,7 @@ export default function TaskList({userDataEndpoint, userTasks, logTasks}) {
             {(userTasks && (userTasks.length > 0)) ? (
                 <div className = "taskList">
                     {sortTasks(userTasks, sortField, sortAscending).map( (task, index) =>
-                    <Task logTasks={logTasks} userDataEndpoint={userDataEndpoint} task={task} key={task.id ? task.id : index}></Task>
+                    <Task logTasks={logTasks} userDataEndpoint={userDataEndpoint} userName={userName} task={task} key={task.id ? task.id : index}></Task>
                 )}
                 </div>
             ) : (
